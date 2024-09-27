@@ -34,6 +34,7 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
         leave=True,
         ncols=80,
     ):
+        # optimizer.zero_grad()
         # move data to GPU
         if torch.cuda.is_available():
             data, target = data.cuda(), target.cuda()
@@ -48,10 +49,12 @@ def train_one_epoch(train_dataloader, model, optimizer, loss):
         loss_value = loss(output, target)  # YOUR CODE HERE
         # 4. backward pass: compute gradient of the loss with respect to model parameters
         # YOUR CODE HERE:
+        optimizer.zero_grad()
         loss_value.backward()
         # 5. perform a single optimization step (parameter update)
         # YOUR CODE HERE:
         optimizer.step()
+        optimizer.zero_grad()
 
         # update average training loss
         train_loss = train_loss + (
@@ -119,6 +122,7 @@ def valid_one_epoch(valid_dataloader, model, loss):
         "\nValid Accuracy: %2d%% (%2d/%2d)" % (100.0 *
                                                correct / total, correct, total)
     )
+    print("barak")
 
     return valid_loss
 
@@ -148,7 +152,7 @@ def optimize(
     # HINT: look here:
     # https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
     scheduler = torch.optim.lr_scheduler.ExponentialLR(
-        optimizer, gamma=0.94
+        optimizer, gamma=0.98
     )  # YOUR CODE HERE
 
     for epoch in range(1, n_epochs + 1):
@@ -164,6 +168,7 @@ def optimize(
                 epoch, train_loss, valid_loss
             )
         )
+        optimizer.zero_grad()
 
         # If the validation loss decreases by more than 1%, save the model
         if valid_loss_min is None or (

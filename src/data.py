@@ -66,8 +66,9 @@ def get_data_loaders(
                 # 100 images through around half of them will undergo the flipping)
                 # T.RandomHorizontalFlip(0.5),
                 # Finally take a 224x224 random part of the image
-                T.RandomCrop(224, padding_mode="reflect",
-                             pad_if_needed=True),  # -
+                # T.RandomCrop(224, padding_mode="reflect",
+                #             pad_if_needed=True),  # -
+                T.CenterCrop(224),
                 T.ToTensor(),
                 T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
             ]
